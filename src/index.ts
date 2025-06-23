@@ -7,9 +7,12 @@ import { findOrCreateContact } from "./utils/helper";
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-app.use(cors());
+// ✅ Allow requests from your frontend domain
+app.use(cors()); // allow all origins (no credentials)
+
+
 app.use(json());
-app.use(express.static(path.join(__dirname, "../public")));
+app.use(express.static(path.join(__dirname, "../public"))); // Serve index.html
 
 app.post("/identify", async (req, res) => {
   try {
