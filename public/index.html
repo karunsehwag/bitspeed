@@ -114,14 +114,15 @@
   <h2>🧠 Bitespeed Contact Identity</h2>
 
   <form id="identityForm">
-    <label for="email">Email:</label>
-    <input type="email" id="email" name="email" placeholder="example@mail.com" required>
+  <label for="email">Email:</label>
+  <input type="email" id="email" name="email" placeholder="example@mail.com">
 
-    <label for="phone">Phone Number:</label>
-    <input type="text" id="phone" name="phoneNumber" placeholder="1234567890" required>
+  <label for="phone">Phone Number:</label>
+  <input type="text" id="phone" name="phoneNumber" placeholder="1234567890">
 
-    <button type="submit">🔍 Identify</button>
-  </form>
+  <button type="submit">🔍 Identify</button>
+</form>
+
 
   <h3>Response:</h3>
   <pre id="responseOutput">Waiting for request...</pre>
@@ -131,32 +132,40 @@
     const output = document.getElementById('responseOutput');
 
     form.addEventListener('submit', async (e) => {
-      e.preventDefault();
-      const email = document.getElementById('email').value.trim();
-      const phoneNumber = document.getElementById('phone').value.trim();
+  e.preventDefault();
 
-      output.textContent = '⏳ Sending request...';
+  const email = document.getElementById('email').value.trim();
+  const phoneNumber = document.getElementById('phone').value.trim();
 
-      try {
-        const response = await fetch('https://bitspeed-1-wn6c.onrender.com/identify', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({ email, phoneNumber }),
-        });
+  // Require at least one
+  if (!email && !phoneNumber) {
+    output.textContent = '⚠️ Please enter either email or phone number.';
+    return;
+  }
 
-        if (!response.ok) {
-          throw new Error(`HTTP error! Status: ${response.status}`);
-        }
+  output.textContent = '⏳ Sending request...';
 
-        const data = await response.json();
-        output.textContent = JSON.stringify(data, null, 2);
-      } catch (err) {
-        console.error('Error:', err);
-        output.textContent = '❌ Error: ' + err.message;
-      }
+  try {
+    const response = await fetch('https://bitspeed-1-wn6c.onrender.com/identify', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ email, phoneNumber }),
     });
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! Status: ${response.status}`);
+    }
+
+    const data = await response.json();
+    output.textContent = JSON.stringify(data, null, 2);
+  } catch (err) {
+    console.error('Error:', err);
+    output.textContent = '❌ Error: ' + err.message;
+  }
+});
+
   </script>
 
 </body>
